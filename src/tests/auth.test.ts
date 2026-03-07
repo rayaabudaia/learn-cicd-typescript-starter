@@ -10,7 +10,7 @@ const createMockRequest = (authHeader?: string): Partial<Request> => {
         return authHeader;
       }
       return undefined;
-    }
+    },
   } as Partial<Request>;
 };
 
@@ -28,16 +28,22 @@ describe("getAPIKey", () => {
 
   test("throws error when Authorization header has invalid format", () => {
     const mockReq = createMockRequest("InvalidFormat") as Request;
-    expect(() => getAPIKey(mockReq)).toThrow("Invalid authorization header format");
+    expect(() => getAPIKey(mockReq)).toThrow(
+      "Invalid authorization header format",
+    );
   });
 
   test("throws error when Authorization header is not ApiKey type", () => {
     const mockReq = createMockRequest("Bearer some-token") as Request;
-    expect(() => getAPIKey(mockReq)).toThrow("Invalid authorization header format");
+    expect(() => getAPIKey(mockReq)).toThrow(
+      "Invalid authorization header format",
+    );
   });
 
   test("throws error when Authorization header has extra parts", () => {
     const mockReq = createMockRequest("ApiKey key extra-part") as Request;
-    expect(() => getAPIKey(mockReq)).toThrow("Invalid authorization header format");
+    expect(() => getAPIKey(mockReq)).toThrow(
+      "Invalid authorization header format",
+    );
   });
 });
