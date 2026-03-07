@@ -1,15 +1,19 @@
-export default [
+import js from "@eslint/js";
+import globals from "globals";
+import tseslint from "typescript-eslint";
+import pluginSecurity from "eslint-plugin-security";
+
+export default tseslint.config(
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  pluginSecurity.configs.recommended,
   {
-    files: ["src/**/*.ts"],
     languageOptions: {
-      parser: (await import("@typescript-eslint/parser")).default,
-      parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
+      globals: {
+        ...globals.node,
       },
-    },
-    plugins: {
-      "@typescript-eslint": (await import("@typescript-eslint/eslint-plugin")).default,
+      ecmaVersion: "latest",
+      sourceType: "module",
     },
     rules: {
       "@typescript-eslint/no-unused-vars": ["error", { 
@@ -19,6 +23,9 @@ export default [
     },
   },
   {
-    ignores: ["dist/**", "node_modules/**", "coverage/**"],
+    files: ["src/**/*.ts"],
   },
-];
+  {
+    ignores: ["dist/**", "node_modules/**", "coverage/**", "eslint.config.js"],
+  }
+);
