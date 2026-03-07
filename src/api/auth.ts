@@ -1,15 +1,16 @@
-import { IncomingHttpHeaders } from "http";
+import { Request } from "express";
 
-export function getAPIKey(headers: IncomingHttpHeaders): string | null {
-  const authHeader = headers["authorization"];
+export function getAPIKey(req: Request): string {
+  const authHeader = req.get("Authorization");
+  
   if (!authHeader) {
-    return null;
+    throw new Error("No authorization header");
   }
-
-  const splitAuth = authHeader.split(" ");
-  if (splitAuth.length < 2 || splitAuth[0] !== "ApiKey") {
-    return null;
+  
+  const parts = authHeader.split(" ");
+  if (parts.length !== 2 || parts[0] !== "ApiKey") {
+    throw new Error("Invalid authorization header format");
   }
-
-  return splitAuth[1];
+  
+  return parts[1];
 }
