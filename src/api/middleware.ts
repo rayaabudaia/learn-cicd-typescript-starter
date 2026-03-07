@@ -1,29 +1,27 @@
-import { Request, Response } from "express";
-import { respondWithError } from "./json.js";
-import { getUser } from "../db/queries/users.js";
-import { User } from "../db/schema.js";
+import { Request, Response, NextFunction } from "express";
 import { getAPIKey } from "./auth.js";
 
-export function middlewareAuth(
-  handler: (req: Request, res: Response, user: User) => void,
-) {
-  return async (req: Request, res: Response) => {
-    try {
-      const apiKey = getAPIKey(req.headers);
-      if (!apiKey) {
-        respondWithError(res, 401, "Couldn't find api key");
-        return;
-      }
-
-      const user = await getUser(apiKey);
-      if (!user) {
-        respondWithError(res, 404, "Couldn't get user");
-        return;
-      }
-
-      handler(req, res, user);
-    } catch (err) {
-      respondWithError(res, 500, "Couldn't authenticate user", err);
+export function middlewareLogResponses(req: Request, res: Response, next: NextFunction) {
+  res.on("finish", () => {
+    if (res.statusCode >= 400) {
+      console.log(`[NON-OK] ${req.method} ${req.url} - Status: ${res.statusCode}`);
     }
-  };
+  });
+  next();
+}
+
+export function middlewareMetricsInc(req: Request, res: Response, next: NextFunction) {
+  // هذه الدالة تضاف حسب احتياج المشروع
+  next();
+}
+
+export function middlewareAuth(req: Request, res: Response, next: NextFunction) {
+  try {
+    // تعديل هنا: نمرر req كاملاً وليس req.headers فقط
+    const apiKey = getAPIKey(req);
+    (req as any).apiKey = apiKey;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: "Unauthorized" });
+  }
 }
