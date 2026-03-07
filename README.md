@@ -1,4 +1,4 @@
-/badge.svg
+
 ![Tests Status](https://github.com/rayaabudaia/learn-cicd-typescript-starter/actions/workflows/ci.yml/badge.svg)
 
 # learn-cicd-typescript-starter (Notely)
