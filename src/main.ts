@@ -44,12 +44,3 @@ v1Router.get("/healthz", handlerReadiness);
 
 app.use("/v1", v1Router);
 
-app.listen(config.api.port, () => {
-  console.log(`Server is running on port: ${config.api.port}`);
-});
-
-// Test security warning - using eval is dangerous
-function testSecurity() {
-  const result = eval("2+2");
-  console.log(result);
-}
