@@ -31,7 +31,8 @@ export function middlewareAuth(
 ) {
   try {
     const apiKey = getAPIKey(req);
-    (req as any).apiKey = apiKey;
+    // استعمال unknown بدل any
+    (req as unknown as { apiKey: string }).apiKey = apiKey;
     next();
   } catch {
     res.status(401).json({ error: "Unauthorized" });
