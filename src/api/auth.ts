@@ -7,9 +7,8 @@ export function getAPIKey(req: Request): string {
     throw new Error("No authorization header");
   }
   
-  // تغيير متعمد: جعل الشرط يبحث عن "Bearer" بدلاً من "ApiKey"
   const parts = authHeader.split(" ");
-  if (parts.length !== 2 || parts[0] !== "Bearer") {
+  if (parts.length !== 2 || parts[0] !== "ApiKey") {
     throw new Error("Invalid authorization header format");
   }
   
