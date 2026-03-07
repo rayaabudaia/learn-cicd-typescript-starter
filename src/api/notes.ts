@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 
-// تعريف User مؤقتاً
 interface User {
   id: string;
   name: string;
@@ -12,19 +11,16 @@ export async function handlerNotesGet(
   res: Response,
 ): Promise<void> {
   try {
-    const user = (req as any).user as User;
+    const user = (req as Record<string, unknown>).user as User;
 
     if (!user) {
       res.status(401).json({ error: "Unauthorized" });
       return;
     }
 
-    // هنا منطق جلب الملاحظات
     res.status(200).json({ message: "Notes fetched successfully" });
-    return;
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Internal server error" });
-    return;
   }
 }
 
@@ -33,7 +29,7 @@ export async function handlerNotesCreate(
   res: Response,
 ): Promise<void> {
   try {
-    const user = (req as any).user as User;
+    const user = (req as Record<string, unknown>).user as User;
 
     if (!user) {
       res.status(401).json({ error: "Unauthorized" });
@@ -47,14 +43,11 @@ export async function handlerNotesCreate(
       return;
     }
 
-    // هنا منطق إنشاء ملاحظة جديدة
     res.status(201).json({
       message: "Note created successfully",
       note: { title, content, userId: user.id },
     });
-    return;
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: "Internal server error" });
-    return;
   }
 }

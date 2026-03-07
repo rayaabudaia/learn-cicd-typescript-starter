@@ -21,7 +21,6 @@ export function middlewareMetricsInc(
   res: Response,
   next: NextFunction,
 ) {
-  // هذه الدالة تضاف حسب احتياج المشروع
   next();
 }
 
@@ -31,11 +30,10 @@ export function middlewareAuth(
   next: NextFunction,
 ) {
   try {
-    // تعديل هنا: نمرر req كاملاً وليس req.headers فقط
     const apiKey = getAPIKey(req);
-    (req as any).apiKey = apiKey;
+    (req as Record<string, unknown>).apiKey = apiKey;
     next();
-  } catch (error) {
+  } catch {
     res.status(401).json({ error: "Unauthorized" });
   }
 }
