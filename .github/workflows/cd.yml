@@ -18,6 +18,11 @@ jobs:
         with:
           node-version: 22
 
+      - name: Configure npm for better retry
+        run: |
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
+
       - name: Install dependencies
         run: npm ci
 
