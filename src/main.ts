@@ -1,45 +1,25 @@
 import express from "express";
 import cors from "cors";
-import path from "path";
 import { config } from "./config.js";
-import { db } from "./db/index.js";
-import { middlewareAuth } from "./api/middleware.js";
-import { handlerReadiness } from "./api/readiness.js";
-import { handlerNotesCreate, handlerNotesGet } from "./api/notes.js";
-import { handlerUsersCreate, handlerUsersGet } from "./api/users.js";
-
-const __dirname = path.resolve();
-
-if (!config.api.port) {
-  console.error("PORT environment variable is not set");
-  process.exit(1);
-}
+import { v1Router } from "./api/v1.js";
 
 const app = express();
+const PORT = config.api.port ? parseInt(config.api.port) : 8080;
+
+app.use(cors());
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: ["https://*", "http://*"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: "*",
-    exposedHeaders: ["Link"],
-    credentials: false,
-    maxAge: 300,
-  }),
-);
+// إضافة مسار / ليرجع 200
+app.get("/", (req, res) => {
+  res.status(200).send("Notely is running");
+});
 
-app.use("/", express.static(path.join(__dirname, config.api.filepathRoot)));
-
-const v1Router = express.Router();
-
-if (db) {
-  v1Router.post("/users", handlerUsersCreate);
-  v1Router.get("/users", middlewareAuth(handlerUsersGet));
-  v1Router.get("/notes", middlewareAuth(handlerNotesGet));
-  v1Router.post("/notes", middlewareAuth(handlerNotesCreate));
-}
-
-v1Router.get("/healthz", handlerReadiness);
+app.get("/healthz", (req, res) => {
+  res.status(200).send("OK");
+});
 
 app.use("/v1", v1Router);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
