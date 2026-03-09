@@ -11,7 +11,7 @@ export async function handlerNotesGet(
   res: Response,
 ): Promise<void> {
   try {
-    const user = (req as unknown as { user: User }).user;
+    const user = (req as { user?: User }).user;
 
     if (!user) {
       res.status(401).json({ error: "Unauthorized" });
@@ -29,7 +29,7 @@ export async function handlerNotesCreate(
   res: Response,
 ): Promise<void> {
   try {
-    const user = (req as unknown as { user: User }).user;
+    const user = (req as { user?: User }).user;
 
     if (!user) {
       res.status(401).json({ error: "Unauthorized" });
