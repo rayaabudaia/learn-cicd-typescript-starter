@@ -11,12 +11,7 @@ export async function handlerNotesGet(
   res: Response,
 ): Promise<void> {
   try {
-<<<<<<< HEAD
-    const user = (req as unknown as { user: User }).user;
-=======
-    // استخدام any مؤقتاً
     const user = (req as any).user as User;
->>>>>>> main
 
     if (!user) {
       res.status(401).json({ error: "Unauthorized" });
@@ -34,12 +29,7 @@ export async function handlerNotesCreate(
   res: Response,
 ): Promise<void> {
   try {
-<<<<<<< HEAD
-    const user = (req as unknown as { user: User }).user;
-=======
-    // استخدام any مؤقتاً
     const user = (req as any).user as User;
->>>>>>> main
 
     if (!user) {
       res.status(401).json({ error: "Unauthorized" });
