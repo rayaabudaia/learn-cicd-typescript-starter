@@ -18,13 +18,23 @@ jobs:
         with:
           node-version: 22
 
-      - name: Configure npm for better retry
-        run: |
-          npm config set fetch-retry-mintimeout 20000
-          npm config set fetch-retry-maxtimeout 120000
-
       - name: Install dependencies
         run: npm ci
 
       - name: Build app
         run: npm run build
+
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build and push Docker image to Artifact Registry
+        run: |-
+          gcloud builds submit \
+            --tag us-central1-docker.pkg.dev/notely-489721/notely-ar-repo/notely:${{ github.sha }} \
+            --timeout=900s
