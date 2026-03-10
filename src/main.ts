@@ -11,7 +11,7 @@ app.use(express.json());
 
 // إضافة مسار / ليرجع 200
 app.get("/", (req, res) => {
-  res.status(200).send("Notely is running");
+  res.status(200).send("Welcome to Notely");
 });
 
 app.get("/healthz", (req, res) => {
